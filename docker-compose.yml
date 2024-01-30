@@ -1,0 +1,19 @@
+version: '1'
+services:
+  selenoid:
+    image: "aerokube/selenoid"
+    network_mode: bridge
+    ports:
+      - "4444:4444"
+    volumes:
+      - ".:/etc/selenoid"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    command: -listen :4444 -conf /etc/selenoid/browsers.json -timeout 3m  
+  selenoid-ui:
+    image: "aerokube/selenoid-ui"
+    network_mode: bridge
+    links:
+      - selenoid
+    ports:
+      - "8084:8080"
+    command: ["--selenoid-uri", "http://selenoid:4444"]
